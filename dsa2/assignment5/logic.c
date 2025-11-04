@@ -3,13 +3,17 @@
 #include <limits.h>
 #include "header.h"
 
+//---------------Utility function---------------
+
 void swap(int *a, int *b)
 {
     int temp = *a;
+
     *a = *b;
     *b = temp;
-    return;
 }
+
+//---------------Max Heap Operations---------------
 
 int isEmptyMax(MaxHeap h)
 {
@@ -19,16 +23,6 @@ int isFullMax(MaxHeap h)
 {
     return (h.rear == h.size - 1);
 }
-
-int isEmptyMin(MinHeap h)
-{
-    return (h.rear == -1);
-}
-int isFullMin(MinHeap h)
-{
-    return (h.rear == h.size - 1);
-}
-
 void initMax(MaxHeap *h, int size)
 {
     h->A = (int *)malloc(sizeof(int) * size);
@@ -37,27 +31,8 @@ void initMax(MaxHeap *h, int size)
     return;
 }
 
-void MaxHeapSort(int *arr, int size)
-{
-    MaxHeap h;
-    initMax(&h, size);
-
-    for (int i = 0; i < size; i++)
-    {
-        insetMax(&h, arr[i]);
-    }
-
-    int i = 0;
-    while (!isEmptyMax(h))
-    {
-        arr[i] = removeMax(&h);
-        i++;
-    }
-
-    return;
-}
-
-void insetMax(MaxHeap *h, int value)
+// Insert Element into Max Heap
+void insertMax(MaxHeap *h, int value)
 {
     if (isFullMax(*h))
         return;
@@ -76,19 +51,7 @@ void insetMax(MaxHeap *h, int value)
     return;
 }
 
-int removeMax(MaxHeap *h)
-{
-    if (isEmptyMax(*h))
-        return INT_MIN;
-
-    int removedElement = h->A[0];
-    h->A[0] = h->A[h->rear];
-    h->rear--;
-    maxHeapify(h, 0);
-
-    return removedElement;
-}
-
+// Creating Max Heap
 void maxHeapify(MaxHeap *h, int index)
 {
     int largest = index;
@@ -110,6 +73,51 @@ void maxHeapify(MaxHeap *h, int index)
     return;
 }
 
+// Remove Max Element from Heap
+int removeMax(MaxHeap *h)
+{
+    if (isEmptyMax(*h))
+        return INT_MIN;
+
+    int removedElement = h->A[0];
+    h->A[0] = h->A[h->rear];
+    h->rear--;
+    maxHeapify(h, 0);
+
+    return removedElement;
+}
+
+// Heap Sort using Max Heap
+void MaxHeapSort(int *arr, int size)
+{
+    MaxHeap h;
+    initMax(&h, size);
+
+    for (int i = 0; i < size; i++)
+    {
+        insertMax(&h, arr[i]);
+    }
+
+    int i = 0;
+    while (!isEmptyMax(h))
+    {
+        arr[i] = removeMax(&h);
+        i++;
+    }
+
+    return;
+}
+
+//---------------Min Heap Operations---------------
+
+int isEmptyMin(MinHeap h)
+{
+    return (h.rear == -1);
+}
+int isFullMin(MinHeap h)
+{
+    return (h.rear == h.size - 1);
+}
 void initMin(MinHeap *h, int size)
 {
     h->A = (int *)malloc(sizeof(int) * size);
@@ -118,27 +126,8 @@ void initMin(MinHeap *h, int size)
     return;
 }
 
-void MinHeapSort(int *arr, int size)
-{
-    MinHeap h;
-    initMin(&h, size);
-
-    for (int i = 0; i < size; i++)
-    {
-        insetMin(&h, arr[i]);
-    }
-
-    int i = 0;
-    while (!isEmptyMin(h))
-    {
-        arr[i] = removeMin(&h);
-        i++;
-    }
-
-    return;
-}
-
-void insetMin(MinHeap *h, int value)
+// Insert element into Min Heap
+void insertMin(MinHeap *h, int value)
 {
     if (isFullMin(*h))
         return;
@@ -157,19 +146,7 @@ void insetMin(MinHeap *h, int value)
     return;
 }
 
-int removeMin(MinHeap *h)
-{
-    if (isEmptyMin(*h))
-        return INT_MIN;
-
-    int removedElement = h->A[0];
-    h->A[0] = h->A[h->rear];
-    h->rear--;
-    minHeapify(h, 0);
-
-    return removedElement;
-}
-
+// Creating Min Heap
 void minHeapify(MinHeap *h, int index)
 {
     int smallest = index;
@@ -186,6 +163,42 @@ void minHeapify(MinHeap *h, int index)
     {
         swap(&h->A[index], &h->A[smallest]);
         minHeapify(h, smallest);
+    }
+
+    return;
+}
+
+// Remove Min Element from Heap
+int removeMin(MinHeap *h)
+{
+    if (isEmptyMin(*h))
+        return INT_MIN;
+
+    int removedElement = h->A[0];
+    h->A[0] = h->A[h->rear];
+    h->rear--;
+    minHeapify(h, 0);
+
+    return removedElement;
+}
+
+
+// Heap Sort using Min Heap
+void MinHeapSort(int *arr, int size)
+{
+    MinHeap h;
+    initMin(&h, size);
+
+    for (int i = 0; i < size; i++)
+    {
+        insertMin(&h, arr[i]);
+    }
+
+    int i = 0;
+    while (!isEmptyMin(h))
+    {
+        arr[i] = removeMin(&h);
+        i++;
     }
 
     return;
